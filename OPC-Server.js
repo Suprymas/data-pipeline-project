@@ -887,7 +887,7 @@ function checkAlarms() {
   // Check quality control
   if (machineData.totalBottlesOrder > 0) {
     const failureRate = (machineData.badBottlesOrder / machineData.totalBottlesOrder) * 100;
-    if (failureRate > 0.5) {
+    if (failureRate > 5) {
       activeAlarms.push({
         parameter: "Quality Control",
         message: "High failure rate",
@@ -897,7 +897,7 @@ function checkAlarms() {
   }
 
   if (activeAlarms.length > 0) {
-    // machineData.machineStatus = "Error";
+    machineData.machineStatus = "Error";
   }
 }
 
@@ -932,9 +932,9 @@ setInterval(() => {
 
     machineData.actualFillVolume = machineData.targetFillVolume + (Math.random() - 0.5) * 2;
     machineData.actualLineSpeed = Math.round(machineData.targetLineSpeed + (Math.random() - 0.5) * 10);
-    machineData.actualProductTemp = machineData.targetProductTemp + (Math.random() - 0.5) * 0.5;
+    machineData.actualProductTemp = machineData.targetProductTemp + (Math.random() - 0.5) * 0.3;
     machineData.actualCO2Pressure = machineData.targetCO2Pressure + (Math.random() - 0.5) * 0.1;
-    machineData.actualCapTorque = machineData.targetCapTorque + (Math.random() - 0.5) * 0.5;
+    machineData.actualCapTorque = machineData.targetCapTorque + (Math.random() - 0.5) * 0.3;
     machineData.actualCycleTime = machineData.targetCycleTime + (Math.random() - 0.5) * 0.1;
     machineData.fillAccuracyDeviation = machineData.actualFillVolume - machineData.targetFillVolume;
 
@@ -960,7 +960,7 @@ function checkParameterDeviation(paramName, actual, target, history) {
   const deviation = Math.abs(actual - target);
   const deviationPercent = (deviation / target) * 100;
 
-  history.push(deviationPercent);
+  history.push(actual);
   if (history.length > 3) history.shift();
 
   if (deviationPercent > 8) {
@@ -972,11 +972,15 @@ function checkParameterDeviation(paramName, actual, target, history) {
       actual: actual,
       target: target
     });
-    // machineData.machineStatus = "Error";
+    machineData.machineStatus = "Error";
     return true;
   }
 
-  if (history.length >= 3 && history.every(d => d > 3)) {
+  if (history.length >= 3 && history.every(d =>{
+    const diff = Math.abs(d - target);
+    const percent = Math.round((diff / target) * 100);
+    return percent > 3
+  })) {
     activeAlarms.push({
       parameter: paramName,
       type: "Persistent Deviation",
@@ -986,43 +990,18 @@ function checkParameterDeviation(paramName, actual, target, history) {
       target: target
     });
 
-    // machineData.machineStatus = "Error";
+    machineData.machineStatus = "Error";
     return true;
   }
 
   return false;
 }
 
-setInterval(() => {
-  if (machineData.machineStatus === "Running") {
-    checkParameterDeviation("Line Speed", machineData.actualLineSpeed, machineData.targetLineSpeed, alarmHistory.lineSpeed);
-    checkParameterDeviation("Cycle Time", machineData.actualCycleTime, machineData.targetCycleTime, alarmHistory.cycleTime);
-  }
-}, 2000);
+
 
 server.start(function() {
   console.log("Server is now listening");
   console.log("port ", server.endpoints[0].port);
-  const endpointUrl = server.endpoints[0].endpointDescriptions()[0].endpointUrl;
-  console.log("the primary server endpoint url is ", endpointUrl);
-  console.log("\nFluidFill Express #2 OPC UA Server");
-  console.log("===================================");
-  console.log("Machine: " + machineData.machineName);
-  console.log("Serial: " + machineData.serialNumber);
-  console.log("Plant: " + machineData.plant);
-  console.log("Line: " + machineData.productionLine);
-  console.log("\nAvailable Methods:");
-  console.log("- StartMachine");
-  console.log("- StopMachine");
-  console.log("- LoadProductionOrder");
-  console.log("- EnterMaintenanceMode");
-  console.log("- StartCIPCycle");
-  console.log("- StartSIPCycle");
-  console.log("- ResetCounters");
-  console.log("- ChangeProduct");
-  console.log("- AdjustFillVolume");
-  console.log("- GenerateLotNumber");
-  console.log("- EmergencyStop");
 
   setTimeout(() => {
     machineData.machineStatus = "Running";
