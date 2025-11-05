@@ -823,6 +823,9 @@ emergencyStopMethod.bindMethod((inputArguments, context, callback) => {
     callback(error);
   }
 })
+// We are going to count how many bottles in a row were failed
+// Allow 3 bottles in a row to be bad
+let bottleFailureCount = 0
 
 function checkAlarms() {
   if (machineData.machineStatus !== "Running") return;
@@ -886,12 +889,11 @@ function checkAlarms() {
 
   // Check quality control
   if (machineData.totalBottlesOrder > 0) {
-    const failureRate = (machineData.badBottlesOrder / machineData.totalBottlesOrder) * 100;
-    if (failureRate > 5) {
+    // Check how many bottlles have failed upon this point
+    if (bottleFailureCount === 3) {
       activeAlarms.push({
         parameter: "Quality Control",
-        message: "High failure rate",
-        failureRate: `${failureRate.toFixed(2)}%`
+        message: "3 bottles in a row have a defect"
       });
     }
   }
@@ -909,7 +911,9 @@ setInterval(() => {
     if (isGoodBottle) {
       machineData.goodBottles++;
       machineData.goodBottlesOrder++;
+      bottleFailureCount = 0;
     } else {
+      bottleFailureCount++; //Bottle failed we track it
       const rejectType = Math.random();
       if (rejectType < 0.4) {
         machineData.badBottlesVolume++;
