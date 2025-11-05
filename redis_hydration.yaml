@@ -1,0 +1,28 @@
+input:
+  label: "mqtt_input"
+  mqtt:
+    urls:
+      - "mqtt://mqtt_broker:1883"
+    client_id: "andoasndn"
+    keepalive: 60
+    clean_session: true
+    topics:
+      - "DortmundBeverageCenter/JuiceFillingLine3/+/+/+/+"
+      - "DortmundBeverageCenter/JuiceFillingLine3/+/+/+"
+
+pipeline:
+  processors:
+    - mapping: |
+        root = this
+        root.field = meta("mqtt_topic").split("/").index(-1)
+        meta key = meta("mqtt_topic").split("/").2
+    - mapping: |
+        root = { this.field: this.value.string() }
+
+output:
+  label: "redis_out"
+  redis_hash:
+    url: "redis://redis:6379"
+    key: ${! meta("key") }
+    walk_metadata: false
+    walk_json_object: true

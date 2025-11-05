@@ -1,0 +1,42 @@
+input:
+  mqtt:
+    urls:
+      - "mqtt://mqtt_broker:1883"
+    topics:
+      - "DortmundBeverageCenter/JuiceFillingLine3/+/+/+/CycleTime"
+      - "DortmundBeverageCenter/JuiceFillingLine3/+/+/MachineStatus"
+    client_id: "redpanda_connect_mqtt_bridge"
+    clean_session: true
+
+pipeline:
+  processors:
+    - mapping: |
+        root.timestamp = this.timestamp
+
+    - branch:
+        request_map: 'root.key = meta("mqtt_topic").split("/").2'
+        processors:
+          - redis:
+              url: "redis://redis:6379"
+              command: hmget
+              args_mapping: 'root = [ this.key, "Article", "Plant", "SerialNumber", "CycleTime", "TargetCycleTime",  "OrderNumber", "CO2Pressure", "TargetCO2Pressure", "MachineStatus"]'
+        result_map: |
+          root.article = this.0
+          root.plant = this.1
+          root.serial_number = this.2
+          root.actual_cycle_time = this.3
+          root.target_cycle_time = this.4
+          root.order = this.5
+          root.co2_pressure = this.6
+          root.target_co2_pressure = this.7
+          root.machine_status = this.8
+          
+
+
+output:
+  kafka:
+    addresses:
+      - redpanda:9092
+    topic: "mqtt_events"
+    key: ${! meta("mqtt_topic") }
+

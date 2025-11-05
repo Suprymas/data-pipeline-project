@@ -1,0 +1,14 @@
+#Webstorm stuff
+/.idea
+
+#Node stuff
+/node_modules
+/package-lock.json
+
+
+#Volumes from containers
+/redis-data
+/redpanda-data
+/mosquitto-data
+/grafana-data
+/timescaledb/data
