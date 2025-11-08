@@ -1,4 +1,5 @@
 services:
+  #OPC-UA server
   opc:
     build:
       context: .
@@ -14,6 +15,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  #OPC-UA server message converter to mqtt
   mqtt-agent:
     build:
       context: .
@@ -33,13 +35,13 @@ services:
       - mqtt
       - opc
 
+  #MQTT broker
   mqtt:
     image: eclipse-mosquitto
     container_name: mqtt_broker
     restart: unless-stopped
     ports:
       - "1883:1883"
-      - "8080:8080"
     volumes:
       - './mosquitto-data:/etc/mosquitto'
       - './mosquitto-data/mosquitto.conf:/mosquitto/config/mosquitto.conf'
@@ -51,6 +53,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  #Redis
   redis:
     image: redis/redis-stack:latest
     container_name: redis
@@ -68,6 +71,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  #Redpanda (Kafka)
   redpanda:
     image: docker.redpanda.com/redpandadata/redpanda:latest
     container_name: redpanda
@@ -85,11 +89,6 @@ services:
       - --mode dev-container
       - --smp 1
       - --default-log-level=info
-    ports:
-      - "18081:18081"
-      - "18082:18082"
-      - "19092:19092"
-      - "19644:9644"
     volumes:
       - ./redpanda-data:/var/lib/redpanda/data
     networks:
@@ -106,6 +105,7 @@ services:
       retries: 5
       start_period: 5s
 
+  #Redpanda console to see messages
   redpanda_console:
     image: docker.redpanda.com/redpandadata/console:latest
     container_name: redpanda_console
@@ -124,7 +124,6 @@ services:
           adminApi:
             enabled: true
             urls: ["http://redpanda:9644"]
-
     ports:
       - "8085:8080"
     networks:
@@ -138,6 +137,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  # Redis hydration agent which enriches incoming mqtt events with information from redis
   redis_hydration:
     image: docker.redpanda.com/redpandadata/connect:latest
     container_name: redis_hydration
@@ -155,12 +155,11 @@ services:
     volumes:
       - ./redis_hydration.yaml:/connect.yaml
 
+  # Agent which writes information from mqtt broker to Redpanda
   mqtt_kafka_bridge:
     image: docker.redpanda.com/redpandadata/connect:latest
     container_name: mqtt_kafka_bridge
     restart: unless-stopped
-    ports:
-      - "4195:4195"  # Health check and metrics endpoint
     volumes:
       - ./mqtt_to_kafka.yaml:/connect.yaml
     networks:
@@ -182,6 +181,7 @@ services:
       retries: 3
       start_period: 10s
 
+  # postgresql
   timescaledb:
     image: timescale/timescaledb:latest-pg17
     container_name: timescaledb
@@ -202,6 +202,7 @@ services:
         max-size: "10m"
         max-file: "3"
 
+  # Agent which publishes messages from Redpanda to postgresql (timescaledb)
   kafka_to_timescaledb:
     image: docker.redpanda.com/redpandadata/connect:latest
     container_name: kafka_to_timescaledb
@@ -221,6 +222,7 @@ services:
       - ./kafka_to_timescale.yaml:/connect.yaml
       - ./connect-state:/var/lib/redpanda-connect
 
+  #grafana
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
