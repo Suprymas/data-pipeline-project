@@ -12,3 +12,4 @@
 /mosquitto-data
 /grafana-data
 /timescaledb/data
+/connect-state

@@ -1,6 +1,9 @@
 services:
   opc:
-    build: .
+    build:
+      context: .
+      target: OPC-Server
+    container_name: opc-server
     ports:
       - "4334:4334"
     networks:
@@ -10,6 +13,25 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  mqtt-agent:
+    build:
+      context: .
+      target: MQTT-Agent
+    container_name: mqtt-agent
+    networks:
+      - advanced_data_management
+    environment:
+      OPCUA: "opc.tcp://opc:4334/UA/fhvopcserver"
+      MQTT: "mqtt://mqtt:1883"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    depends_on:
+      - mqtt
+      - opc
 
   mqtt:
     image: eclipse-mosquitto

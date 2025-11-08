@@ -1,16 +1,18 @@
 import { OPCUAClient, AttributeIds, TimestampsToReturn } from "node-opcua";
 import mqtt from "mqtt";
 
+
+const OPCUA_ENDPOINT = process.env.OPCUA || "opc.tcp://localhost:4334/UA/fhvopcserver";
+const MQTT_ENDPOINT = process.env.MQTT || "mqtt://localhost:1883";
 // OPC-UA connection
-const opcuaEndpoint = "opc.tcp://localhost:4334/UA/fhvopcserver";
 const client = OPCUAClient.create({ endpointMustExist: false });
 
 // MQTT connection
-const mqttClient = mqtt.connect("mqtt://localhost:1883");
+const mqttClient = mqtt.connect(MQTT_ENDPOINT);
 const baseTopic = "DortmundBeverageCenter/JuiceFillingLine3/FluidFillExpress2";
 
 async function startAgent() {
-  await client.connect(opcuaEndpoint);
+  await client.connect(OPCUA_ENDPOINT);
   console.log("Connected to OPC-UA server");
 
   const session = await client.createSession();
