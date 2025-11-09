@@ -1,17 +1,22 @@
-FROM node:24 as base
+FROM node:25-alpine AS base
 WORKDIR /app
-COPY package.json ./
+ENV NODE_ENV=production
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
+FROM node:24-alpine AS opc-server
 
-FROM base as OPC-Server
-
-RUN npm install --no-optional
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=base /app/node_modules ./node_modules
 COPY OPC-Server.js .
 CMD ["node", "OPC-Server.js"]
 
 
-FROM base as MQTT-Agent
+FROM node:24-alpine AS mqtt-agent
 
-RUN npm install
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=base /app/node_modules ./node_modules
 COPY MQTT-Agent.js .
 CMD ["node", "MQTT-Agent.js"]

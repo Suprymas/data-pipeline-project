@@ -5,6 +5,5 @@ timescaledb
 .gitignore
 *.yaml
 *.conf
-package-lock.json
 README.md
 connect-state
