@@ -18,31 +18,27 @@ pipeline:
         root.actual_co2_pressure = this.co2_pressure
         root.target_co2_pressure = this.target_co2_pressure
         root.machine_status = this.machine_status
-
-
-
-output:
-  sql_insert:
-    driver: postgres
-    dsn: "postgres://postgres:password@timescaledb:5432/postgres?sslmode=disable"
-    table: statistics
-    columns:
-      - time
-      - article
-      - production_order
-      - target_cycle_time
-      - actual_cycle_time
-      - target_co2_pressure
-      - actual_co2_pressure
-      - machine_status
-    args_mapping: |
-      root = [
-        this.timestamp,
-        this.article,
-        this.order,
-        this.target_cycle_time,
-        this.actual_cycle_time,
-        this.target_co2_pressure,
-        this.actual_co2_pressure,
-        this.machine_status
-      ]
+    - sql_insert:
+        driver: postgres
+        dsn: "postgres://postgres:password@timescaledb:5432/postgres?sslmode=disable"
+        table: statistics
+        columns:
+          - time
+          - article
+          - production_order
+          - target_cycle_time
+          - actual_cycle_time
+          - target_co2_pressure
+          - actual_co2_pressure
+          - machine_status
+        args_mapping: |
+          root = [
+            this.timestamp,
+            this.article,
+            this.order,
+            this.target_cycle_time,
+            this.actual_cycle_time,
+            this.target_co2_pressure,
+            this.actual_co2_pressure,
+            this.machine_status
+          ]

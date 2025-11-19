@@ -31,6 +31,10 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4334 || exit 1" ]
+      interval: 10s
+      retries: 5
     depends_on:
       - mqtt
       - opc
