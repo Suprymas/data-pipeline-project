@@ -4,7 +4,7 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-FROM node:24-alpine AS opc-server
+FROM node:25-alpine AS opc-server
 
 WORKDIR /app
 ENV NODE_ENV=production
@@ -13,7 +13,7 @@ COPY OPC-Server.js .
 CMD ["node", "OPC-Server.js"]
 
 
-FROM node:24-alpine AS mqtt-agent
+FROM node:25-alpine AS mqtt-agent
 
 WORKDIR /app
 ENV NODE_ENV=production

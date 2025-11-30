@@ -48,15 +48,16 @@ If you want to use [UA expert](https://www.unified-automation.com/products/devel
 Using [MQTT Explorer](http://mqtt-explorer.com) or other MQTT analyser reach it by **mqtt://mqtt:1883** \
 MQTT broker ([eclipse-mosquito](https://hub.docker.com/_/eclipse-mosquitto)) is running on **port 1883** 
 
-[Redis](https://hub.docker.com/r/redis/redis-stack) is running on **port 6379** and you can access the console on **localhost:8001** where you will see 
+[Redis](https://hub.docker.com/r/redis/redis-stack) is running on **port 6379**, and you can access the console on **localhost:8001** where you will see 
 hash "FluidFillExpress2" and inside it all fields
 
-[Redpanda](https://hub.docker.com/r/redpandadata/redpanda) has no exposed ports to the host machine but you can acces it using
-[Redpanda console](https://hub.docker.com/r/redpandadata/console) on **port 8085**
+[Redpanda](https://hub.docker.com/r/redpandadata/redpanda) has no exposed ports to the host machine, but you can access it using
+[Redpanda console](https://hub.docker.com/r/redpandadata/console) on **port 8085**, in the topics you will find "mqtt_events"
 
 [TimescaleDB](https://hub.docker.com/r/timescale/timescaledb) is running on **port 5432** 
 
-[Grafana](https://hub.docker.com/r/grafana/grafana) is running on **port 3000**
+[Grafana](https://hub.docker.com/r/grafana/grafana) is running on **port 3000** \
+Default grafana login is email = **admin**; password = **admin**
 
 
 

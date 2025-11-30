@@ -24,7 +24,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -102,7 +102,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -182,7 +182,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -285,7 +285,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -396,7 +396,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -513,7 +513,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -638,7 +638,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -750,7 +750,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -871,7 +871,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -988,7 +988,7 @@
     {
       "datasource": {
         "type": "grafana-postgresql-datasource",
-        "uid": "df2hu8fre7o5cb"
+        "uid": "timescaledb"
       },
       "fieldConfig": {
         "defaults": {
@@ -1108,5 +1108,5 @@
   "timezone": "browser",
   "title": "Analytical dashboard",
   "uid": "adx6d2l",
-  "version": 28
+  "version": 2
 }

@@ -48,7 +48,7 @@ services:
       - "1883:1883"
     volumes:
       - './mosquitto-data:/etc/mosquitto'
-      - './mosquitto-data/mosquitto.conf:/mosquitto/config/mosquitto.conf'
+      - './mosquitto.conf:/mosquitto/config/mosquitto.conf'
     networks:
       - advanced_data_management
     logging:
@@ -235,6 +235,7 @@ services:
       - '3000:3000'
     volumes:
       - ./grafana-data:/var/lib/grafana
+      - ./grafana-provisioning:/etc/grafana/provisioning
     networks:
       - advanced_data_management
     logging:
